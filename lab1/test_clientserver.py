@@ -25,10 +25,17 @@ class TestEchoService(unittest.TestCase):
         super().setUp()
         self.client = clientserver.Client()  # create new client for each test
 
-    def test_srv_get(self):  # each test_* function is a test
-        """Test simple call"""
-        msg = self.client.call("Hello VS2Lab")
-        self.assertEqual(msg, 'Hello VS2Lab*')
+    def test_simple_get(self):
+        msg = self.client.get("Charlotte")
+        self.assertEqual(msg,"+49 5555 01723")
+
+    def test_simple_get_all(self):
+        msg = self.client.get_all()
+        self.assertEqual(msg, "{'Lennart': '+49 1234 987654', 'Charlotte': '+49 5555 01723', 'Tim': '+49 9182 736455', 'Telemarketing AG': '0 800 800 3'}")
+
+    def test_error_get(self):
+        msg = self.client.get("fgaiu")
+        self.assertEqual(msg, "Entry with given name not found.") # ausgegebener error
 
     def tearDown(self):
         self.client.close()  # terminate client after each test
