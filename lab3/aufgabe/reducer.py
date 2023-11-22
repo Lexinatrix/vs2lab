@@ -26,4 +26,7 @@ class Reducer(threading.Thread):
             else:
                 self.words[word] = 1
 
-            print(self, "received", word, "current count:" + str(self.words[word]))
+            print(self, "received" + "'" + word  + "'" +  "current count:" + str(self.words[word]))
+            #print(self, "my dict:")
+            #for word in self.words:
+                #print(str(word) + ":" + str(self.words[word]))

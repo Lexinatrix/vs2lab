@@ -17,7 +17,9 @@ reducers = {
 #print("created Reducers")
 
 #put text into splitter
-text = "ABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\nABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\nABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\n"
+with open("wordcount.txt") as txt:
+    text = txt.read()
+#text = "ABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\nABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\nABC XYZ FEG\nGHJ LKS UET\nPOS GUT QZC\n"
 splitter.putText(text)
 
 splitter.start()
