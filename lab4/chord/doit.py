@@ -8,8 +8,10 @@ Chord Application
 """
 
 import logging
+import random
 import sys
 import multiprocessing as mp
+from time import sleep
 
 import chordnode as chord_node
 import constChord
@@ -24,12 +26,38 @@ class DummyChordClient:
     def __init__(self, channel):
         self.channel = channel
         self.node_id = channel.join('client')
+        self.logger = logging.getLogger("vs2lab.lab4.doit.DummyChordClient")
 
     def enter(self):
         self.channel.bind(self.node_id)
 
     def run(self):
-        print("Implement me pls...")
+
+        nodeList = sorted([node.decode() for node in self.channel.channel.smembers('node')])
+        print("nodes:", nodeList)
+
+        for i in range(20):
+            print("__________________________________________________________________________________________________________________")
+            randomNode = random.choice(nodeList)
+            print("random node:", randomNode)
+
+            randomDataPoint = random.randrange(0, 63)
+            print("random datapoint:", randomDataPoint)
+            
+            self.logger.info("Client {:04n} sent LOOKUP_REQ for {:04n} to node {:04n}."
+                                 .format(int(self.node_id), int(randomDataPoint), int(randomNode)))
+
+            self.channel.send_to([randomNode], (constChord.LOOKUP_REQ, randomDataPoint, self.node_id))
+            while True:
+                message = self.channel.receive_from_any()  # Wait for any request
+                sender: str = message[0]  # Identify the sender
+                request = message[1]  # And the actual request
+
+                if request[0] == constChord.LOOKUP_REP:
+                    self.logger.info("Client {:04n} received LOOKUP_REP for {:04n} at node {:04n} from node {:04n}."
+                                 .format(int(self.node_id), int(randomDataPoint), int(sender), int(sender)))
+                    break
+
         self.channel.send_to(  # a final multicast
             {i.decode() for i in list(self.channel.channel.smembers('node'))},
             constChord.STOP)
