@@ -41,7 +41,7 @@ class DummyChordClient:
             randomNode = random.choice(nodeList)
             print("random node:", randomNode)
 
-            randomDataPoint = random.randrange(0, 63)
+            randomDataPoint = random.randrange(0, self.channel.MAXPROC - 1)
             print("random datapoint:", randomDataPoint)
             
             self.logger.info("Client {:04n} sent LOOKUP_REQ for {:04n} to node {:04n}."
